@@ -1,0 +1,20 @@
+library(shiny)
+library(shinyFiles)
+library(jsonlite)
+library(shinydashboard)
+library(vcfR)
+library(data.table)
+library(dplyr)
+library(stringr)
+library(DT)
+library(shinyWidgets)
+library(httr)
+library(shinyjs)
+library(promises)
+library(future)
+library(httr)
+
+# plumber yuklerken installation of package ‘sodium’ had non-zero exit status hatasi verdi
+# Configuration failed because libsodium was not found. Try installing:
+  # * deb: libsodium-dev (Debian, Ubuntu, etc)
+# library(plumber)

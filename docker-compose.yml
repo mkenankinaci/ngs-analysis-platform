@@ -1,0 +1,97 @@
+services:
+  init-data:
+    image: alpine:3
+    environment:
+      NGS_DATA_GID: "${NGS_DATA_GID:-1000}"
+    volumes:
+      - ./local_files:/data
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        for dir in . bam bed fastqs logs reference reference/bwa reference/known-sites reference/vep reports reports/fastp reports/fastqc tmp trimfastq vcf; do
+          path="/data/$$dir"
+          mkdir -p "$$path"
+          chgrp "$$NGS_DATA_GID" "$$path"
+          chmod 2770 "$$path"
+        done
+  fqauto:
+    depends_on:
+      init-data:
+        condition: service_completed_successfully
+    build: ./fqauto
+    volumes:
+      - ./fqauto:/srv/shiny-server/app:ro
+      - ./local_files:/files
+  varint:
+    depends_on:
+      init-data:
+        condition: service_completed_successfully
+    build: ./varint
+    volumes:
+      - ./varint:/srv/shiny-server/app:ro
+      - ./local_files:/files
+  tsvauto-api:
+    depends_on:
+      init-data:
+        condition: service_completed_successfully
+    build: ./tsvopsapi
+    ports:
+      - "127.0.0.1:${TSV_PORT:-8000}:8000"
+    volumes:
+      - ./local_files:/files
+  ngs-tools:
+    depends_on:
+      init-data:
+        condition: service_completed_successfully
+    build: ./ngs-tools
+    environment:
+      SSH_PASSWORD: "${SSH_PASSWORD:-}"
+      VEP_CACHE_DIR: /root/.vep
+    volumes:
+      - ./local_files:/data
+      - ./local_files/reference/vep:/root/.vep
+      - ngs_ssh:/run/ngs-credentials
+    healthcheck:
+      test: ["CMD", "ssh-keyscan", "-T", "3", "-t", "ed25519", "localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+  n8n:
+    depends_on:
+      init-data:
+        condition: service_completed_successfully
+      ngs-tools:
+        condition: service_healthy
+    entrypoint: ["tini", "--", "/bin/sh", "/opt/ngs-bootstrap/start.sh"]
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION:-stable}
+    ports:
+      - "127.0.0.1:${N8N_PORT:-5678}:5678"
+    group_add:
+      - "${NGS_DATA_GID:-1000}"
+    environment:
+      NODES_EXCLUDE: '[]'
+      N8N_RESTRICT_FILE_ACCESS_TO: /files
+      N8N_BLOCK_FS_WRITE_ACCESS: "false"
+      N8N_BLOCK_FS_READ_ACCESS: "false"
+      N8N_SECURE_COOKIE: "false"
+      TZ: "${TZ:-Europe/Istanbul}"
+      GENERIC_TIMEZONE: "${TZ:-Europe/Istanbul}"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./local_files:/files
+      - ./n8n/workflows:/workflows:ro
+      - ./n8n/bootstrap:/opt/ngs-bootstrap:ro
+      - ngs_ssh:/run/ngs-credentials:ro
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - fqauto
+      - varint
+    ports:
+      - "127.0.0.1:${WEB_PORT:-80}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+volumes:
+  ngs_ssh:
+  n8n_data:

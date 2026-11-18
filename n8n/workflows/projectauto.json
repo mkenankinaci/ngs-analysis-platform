@@ -1,0 +1,2826 @@
+{
+  "name": "projectauto",
+  "nodes": [
+    {
+      "parameters": {
+        "command": "=for ext in amb ann bwt pac sa; do test -s \"/files/reference/bwa/Homo_sapiens_assembly38.fasta.$ext\" || { echo \"Yok\"; exit 0; }; done; echo \"Var\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2944,
+        -1184
+      ],
+      "id": "99769e71-342c-48f0-8f16-3ea0d18ff0f8",
+      "name": "control_bwa_indexes"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "52f65301-9243-48b3-97e0-03b62c1470eb",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2720,
+        -1104
+      ],
+      "id": "26a89a3d-cb87-475d-816d-dbfab4162adb",
+      "name": "check_bwa_indexes"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "280eb49f-7dd6-4eac-a5cd-94c3e54fafd1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -5760,
+        -784
+      ],
+      "id": "2311af24-3611-4ec5-9978-e789a0954c2f",
+      "name": "Webhook1",
+      "webhookId": "280eb49f-7dd6-4eac-a5cd-94c3e54fafd1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Automation started: $(date)\" >> /files/logs/{{ $json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -5360,
+        -784
+      ],
+      "id": "c065fa13-e224-4162-82b3-ff593538ca24",
+      "name": "info_start1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the FASTA file for the reference genome: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -5136,
+        -1168
+      ],
+      "id": "f495b8ca-fd65-425f-b184-5ddda34dc902",
+      "name": "info_check_fasta1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] No suitable FASTA file found for hg38; the relevant file is being downloaded.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4464,
+        -1264
+      ],
+      "id": "41c70cc9-fafe-4bc8-b7e3-f0b16e03cf38",
+      "name": "info_download_fasta1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/reference/bwa/Homo_sapiens_assembly38.fasta ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4912,
+        -1168
+      ],
+      "id": "23cf9247-c706-4fb2-934d-ad7c36b15ae1",
+      "name": "control_fasta1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -4688,
+        -1168
+      ],
+      "id": "00e92c56-1a67-413b-9ca3-3065166b8ae4",
+      "name": "check_fasta1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/reference/known-sites/Homo_sapiens_assembly38.dbsnp138.vcf ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4912,
+        -784
+      ],
+      "id": "89c47cba-1e0b-44fe-ac00-c02a08bbebdb",
+      "name": "control_dbsnp"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -4688,
+        -784
+      ],
+      "id": "f0e2d9c5-58cb-492f-b5a6-260ec2cddc43",
+      "name": "check_dbsnp"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] dbSNP file was not found; the file is now being downloaded.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4464,
+        -880
+      ],
+      "id": "908792c5-0870-4282-95ff-1da5fe99e14a",
+      "name": "info_download_dbsnp"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the Homo_sapiens_assembly38.dbsnp138.vcf: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -5136,
+        -784
+      ],
+      "id": "0b0d95b4-2f5e-4381-bee9-12388d771c44",
+      "name": "info_check_dbsnp"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; (tmp=$(mktemp /data/reference/bwa/Homo_sapiens_assembly38.fasta.part.XXXXXX) || exit 1; trap 'rm -f \"$tmp\"' EXIT; wget -O \"$tmp\" https://storage.googleapis.com/gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.fasta && chmod 0664 \"$tmp\" && mv \"$tmp\" /data/reference/bwa/Homo_sapiens_assembly38.fasta) >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -4272,
+        -1264
+      ],
+      "id": "29d1a415-0b82-4672-9347-c4b5f969044e",
+      "name": "download_hg38_fasta_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; (tmp=$(mktemp /data/reference/known-sites/Homo_sapiens_assembly38.dbsnp138.vcf.part.XXXXXX) || exit 1; trap 'rm -f \"$tmp\"' EXIT; wget -O \"$tmp\" https://storage.googleapis.com/gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf && chmod 0664 \"$tmp\" && mv \"$tmp\" /data/reference/known-sites/Homo_sapiens_assembly38.dbsnp138.vcf) >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -4256,
+        -880
+      ],
+      "id": "6cebed4e-61fd-4145-a4d3-418b3d82f824",
+      "name": "download_dbsnp138_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the homo_sapiens_merged_vep_116_GRCh38.tar.gz: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -5136,
+        -400
+      ],
+      "id": "9a6f822a-be59-4114-9617-a2ae20c4bc9f",
+      "name": "info_check_vep_116_GRCh"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -d /files/reference/vep/homo_sapiens_merged ] || [ -f /files/reference/vep/homo_sapiens_merged_vep_116_GRCh38.tar.gz ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4912,
+        -400
+      ],
+      "id": "b5af2111-5940-492f-bfe4-abfbfde50f35",
+      "name": "control_vep_116_GRCh"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -4688,
+        -400
+      ],
+      "id": "8fd6a1bf-5400-46a3-af71-633ae50b6811",
+      "name": "check_vep_116_GRCh"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The file homo_sapiens_merged_vep_116_GRCh38.tar.gz was not found; the file is now being downloaded.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4480,
+        -496
+      ],
+      "id": "697f832e-0932-4e45-b02b-b75fc362c2f6",
+      "name": "info_download_vep_116_GRCh"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; (tmp=$(mktemp /data/reference/vep/homo_sapiens_merged_vep_116_GRCh38.tar.gz.part.XXXXXX) || exit 1; trap 'rm -f \"$tmp\"' EXIT; wget -O \"$tmp\" https://ftp.ensembl.org/pub/release-116/variation/indexed_vep_cache/homo_sapiens_merged_vep_116_GRCh38.tar.gz && chmod 0664 \"$tmp\" && mv \"$tmp\" /data/reference/vep/homo_sapiens_merged_vep_116_GRCh38.tar.gz) >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -4048,
+        -496
+      ],
+      "id": "d24b71ee-6267-4eb9-a2a8-1a3d1301ee8b",
+      "name": "download_vep_116_GRCh38_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Reference FASTA file found; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3696,
+        -1072
+      ],
+      "id": "a1f49f3e-c3f6-41c2-a3cb-c94e70450386",
+      "name": "info_fasta_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The download of the reference FASTA file is complete: $(date)\" >> /files/logs/{{ $json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4080,
+        -1264
+      ],
+      "id": "80c30359-a4a6-4182-9f7d-d23662b0968b",
+      "name": "info_fasta_downloaded1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The download of the dbsnp file is complete: $(date)\" >> /files/logs/{{ $json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -4048,
+        -880
+      ],
+      "id": "669daf66-783d-46d7-896f-db2850998f79",
+      "name": "info_dbsnp_downloaded1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] dbSNP file found; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3648,
+        -720
+      ],
+      "id": "4f420d7a-17de-4d9e-8824-b745394e91a0",
+      "name": "info_dbsnp_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The download of the vep116 file is complete: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3648,
+        -496
+      ],
+      "id": "c8663525-550d-421b-b161-9d86cceefdac",
+      "name": "info_vep116_downloaded1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] VEP cache directory or archive found; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3648,
+        -304
+      ],
+      "id": "90bb50c8-7703-4608-9aba-4ca27417e6d3",
+      "name": "info_vep116_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the dict file: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2000,
+        -1104
+      ],
+      "id": "015866d7-a1f5-4247-b54a-5eda5eed202d",
+      "name": "info_check_dict1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/reference/bwa/Homo_sapiens_assembly38.dict ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1808,
+        -1104
+      ],
+      "id": "be8ad76c-51e5-4050-8b4f-edafa6b6f952",
+      "name": "control_dict1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1584,
+        -1200
+      ],
+      "id": "75d46073-a229-4d01-ab66-bbc78b2ab26a",
+      "name": "check_dict1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Dict file was not found; the file is now being created.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1392,
+        -1296
+      ],
+      "id": "0c3e7959-a86b-4635-9c68-575478a34e8c",
+      "name": "info_create_dict1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Creation of the dict file is complete: $(date)\" >> /files/logs/{{ $json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        -1296
+      ],
+      "id": "48716004-a227-4612-95ff-29ce62a77e1b",
+      "name": "info_dict_created1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] dict file found; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        -1120
+      ],
+      "id": "cf3aec8a-5a77-4567-99c8-bd2193658eaa",
+      "name": "info_dict_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the fai file: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        -1200
+      ],
+      "id": "f85a4c4c-fd12-45ea-a9fa-94c8c1d0bc75",
+      "name": "info_check_fai1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/reference/bwa/Homo_sapiens_assembly38.fasta.fai ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -1200
+      ],
+      "id": "70a94c70-c508-4888-9e9f-60fd72346b79",
+      "name": "control_fai1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -480,
+        -1200
+      ],
+      "id": "8690b0f7-1215-465b-bd2c-c2932c5c936a",
+      "name": "check_fai1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Fai file was not found; the file is now being created.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -1296
+      ],
+      "id": "dd3f6a52-c788-429c-9e52-8bb092db1a07",
+      "name": "info_create_fai1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; gatk CreateSequenceDictionary -R /data/reference/bwa/Homo_sapiens_assembly38.fasta >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        -1296
+      ],
+      "id": "0811c32e-5789-4326-9e23-09fbbb53ae20",
+      "name": "create_dict_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; samtools faidx /data/reference/bwa/Homo_sapiens_assembly38.fasta >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -1296
+      ],
+      "id": "19ae2552-6aa4-4293-812c-1438f9c90f34",
+      "name": "create_fai_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Creation of the fai file is complete: $(date)\" >> /files/logs/{{ $json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        192,
+        -1296
+      ],
+      "id": "ce48f7ca-68ef-46d6-8710-d0312eb0c301",
+      "name": "info_fai_created1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] fai file found; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        192,
+        -1120
+      ],
+      "id": "c0e28f4d-1465-47e9-a173-aef4c048abe8",
+      "name": "info_fai_found1"
+    },
+    {
+      "parameters": {
+        "content": "## bwa file operations",
+        "height": 352,
+        "width": 1712
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5184,
+        -1296
+      ],
+      "typeVersion": 1,
+      "id": "8a1fba33-142a-4948-a761-08e13f06d7c8",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## dbSNP file operations",
+        "height": 352,
+        "width": 1712
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5184,
+        -896
+      ],
+      "typeVersion": 1,
+      "id": "be0bffe8-233c-48be-ac98-e35d2498b5e1",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## vep file operations",
+        "height": 352,
+        "width": 1712
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5184,
+        -512
+      ],
+      "typeVersion": 1,
+      "id": "efb73435-0918-4129-81f2-3655dabfa919",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "## fastp operations",
+        "height": 352,
+        "width": 1376
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3216,
+        -912
+      ],
+      "typeVersion": 1,
+      "id": "6f7cd3f3-a7f6-4bd6-9389-e15857528255",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the _trimmed_R1.fastq.gz, _trimmed_R2.fastq.gz, _fastp.html, and _fastp.json files for the fastp: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3168,
+        -800
+      ],
+      "id": "c95b7109-7062-4e6d-9705-d6bd9d16eb0c",
+      "name": "info_check_fastp1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R1.fastq.gz ] && [ -f /files/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R2.fastq.gz ] && [ -f /files/reports/fastp/{{ $('Webhook1').item.json.body.ornekAdi }}_fastp.html ] && [ -f /files/reports/fastp/{{ $('Webhook1').item.json.body.ornekAdi }}_fastp.json ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2944,
+        -800
+      ],
+      "id": "80626c5d-d8af-4459-af62-4b78d8d29733",
+      "name": "control_fastp1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2720,
+        -800
+      ],
+      "id": "eebbda03-9e66-4e69-bd35-15e64b84eab0",
+      "name": "check_fastp1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Fastp files for the {{ $('Webhook1').item.json.body.ornekAdi }} sample could not be found; the fastp program is now being launched.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2496,
+        -896
+      ],
+      "id": "655be430-9f0b-4f97-91c0-c9c5e9af19b1",
+      "name": "info_start_fastp1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; fastp \\\n  -i /data/fastqs/{{ $('Webhook1').item.json.body.fq1[0].name }} \\\n  -I /data/fastqs/{{ $('Webhook1').item.json.body.fq2[0].name }} \\\n  -o \"/data/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R1.fastq.gz\" \\\n  -O \"/data/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R2.fastq.gz\" \\\n  --thread {{ $('Webhook1').item.json.body.ncore }} \\\n  --html \"/data/reports/fastp/{{ $('Webhook1').item.json.body.ornekAdi }}_fastp.html\" \\\n  --json \"/data/reports/fastp/{{ $('Webhook1').item.json.body.ornekAdi }}_fastp.json\" >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2272,
+        -896
+      ],
+      "id": "9d81b83c-7a7a-47ce-af33-ca7f83d00697",
+      "name": "fastp_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The fastp is complete for the {{ $('Webhook1').item.json.body.ornekAdi }} sample: $(date)\" >> /files/logs/{{ $json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        -896
+      ],
+      "id": "6eb7e32b-f565-43f8-8f46-4e6c591f99f8",
+      "name": "info_fastp_completed1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] fastp files found for the {{ $('Webhook1').item.json.body.ornekAdi }} sample; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        -720
+      ],
+      "id": "9e689305-dcfa-4e4f-8ca0-b85a4120574b",
+      "name": "info_fastp_files_found1"
+    },
+    {
+      "parameters": {
+        "content": "## fastqc operations",
+        "height": 352,
+        "width": 1376
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1712,
+        -912
+      ],
+      "typeVersion": 1,
+      "id": "25404666-cfe4-4e32-9d1c-3929f8921a0a",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the _trimmed_R1_fastqc.html, _trimmed_R2_fastqc.html, _trimmed_R1_fastqc.zip and _trimmed_R2_fastqc.zip files for the fastqc: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1664,
+        -800
+      ],
+      "id": "162ab4d4-af8f-4756-9df1-2d771a8c5ca5",
+      "name": "info_check_fastqc1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/reports/fastqc/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R1_fastqc.html ] && [ -f /files/reports/fastqc/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R2_fastqc.html ] && [ -f /files/reports/fastqc/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R1_fastqc.zip ] && [ -f /files/reports/fastqc/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R2_fastqc.zip ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        -800
+      ],
+      "id": "2fa0df1e-4d69-4958-8b13-b88243475a9a",
+      "name": "control_fastqc1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1216,
+        -800
+      ],
+      "id": "9a71c9a1-fc1f-442b-9db1-e9d9766084f8",
+      "name": "check_fastqc1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Fastqc files for the {{ $('Webhook1').item.json.body.ornekAdi }} sample could not be found; the fastqc program is now being launched.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        -896
+      ],
+      "id": "0e8c11b6-622e-4880-bafe-d943287658e0",
+      "name": "info_start_fastqc1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The fastqc is complete for the {{ $('Webhook1').item.json.body.ornekAdi }} sample: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        -896
+      ],
+      "id": "64535237-ceef-476c-8d22-3ff9a962fa46",
+      "name": "info_fastqc_completed1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] fastqc files found for the {{ $('Webhook1').item.json.body.ornekAdi }} sample; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        -720
+      ],
+      "id": "2f15d295-0c3c-4070-aca9-66b7fd85c29f",
+      "name": "info_fastqc_files_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; fastqc \\\n  -t {{ $('Webhook1').item.json.body.ncore }} \\\n  -o /data/reports/fastqc/ \\\n  /data/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R1.fastq.gz \\\n  /data/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R2.fastq.gz >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -896
+      ],
+      "id": "e031fcb8-c6d3-4f18-8b94-eff159faf56b",
+      "name": "fastqc_ssh1"
+    },
+    {
+      "parameters": {
+        "content": "## sorted.bam file operations",
+        "height": 352,
+        "width": 1376
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3216,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "b5e68c98-c64f-4d0c-a8a5-1a6dc3a41e10",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the {{ $('Webhook1').item.json.body.ornekAdi }}.sorted.bam files for the alignment step: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3168,
+        -384
+      ],
+      "id": "07334f27-3a50-42cc-a67c-a571f5e7d078",
+      "name": "info_check_sorted.bam1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.bam ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2944,
+        -384
+      ],
+      "id": "fe7f44d4-2692-4d89-97e9-73612b69d839",
+      "name": "control_sorted.bam1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2720,
+        -384
+      ],
+      "id": "a2a5770c-03b4-49da-b015-cb04b6349bd1",
+      "name": "check_sorted.bam1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] {{ $('Webhook1').item.json.body.ornekAdi }}.sorted.bam file could not be found; the bwa program is now being launched.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2496,
+        -480
+      ],
+      "id": "f3ed5837-e052-4d22-ae29-bd83d7fd854e",
+      "name": "info_start_sorted.bam1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; bwa mem -t {{ $('Webhook1').item.json.body.ncore }} -R \"@RG\\tID:{{ $('Webhook1').item.json.body.ornekAdi }}\\tSM:{{ $('Webhook1').item.json.body.ornekAdi }}\\tPL:ILLUMINA\" \\\n  /data/reference/bwa/Homo_sapiens_assembly38.fasta \\\n  /data/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R1.fastq.gz \\\n  /data/trimfastq/{{ $('Webhook1').item.json.body.ornekAdi }}_trimmed_R2.fastq.gz \\\n  | samtools sort -@ {{ $('Webhook1').item.json.body.ncore }} -m 2G -T /data/bam/temp_sorting -o /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.bam >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2272,
+        -480
+      ],
+      "id": "7faaf9e7-a39c-4563-b84b-da3c58ff43d9",
+      "name": "bwa_mem_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The bwa mem is complete and {{ $('Webhook1').item.json.body.ornekAdi }}.sorted.bam file created: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        -480
+      ],
+      "id": "c25b32cf-21a9-469f-ada6-3d0382856ad9",
+      "name": "info_sorted.bam_completed1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] fastqc files found for the {{ $('Webhook1').item.json.body.ornekAdi }} sample; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        -304
+      ],
+      "id": "2eb0c190-e706-458e-92f3-aa274417ed56",
+      "name": "info_sorted.bam_file_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; bwa index /data/reference/bwa/Homo_sapiens_assembly38.fasta >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2464,
+        -1296
+      ],
+      "id": "857cc13f-aa12-42fa-aac9-d744772c18e7",
+      "name": "install_fasta_bwa_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=for ext in amb ann bwt pac sa; do test -s \"/files/reference/bwa/Homo_sapiens_assembly38.fasta.$ext\" || { echo \"Missing or empty BWA index: $ext\" >&2; exit 1; }; done\numask 0002\necho \"[INFO] BWA reference indexes are ready: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2256,
+        -1296
+      ],
+      "id": "40d508af-92ae-40b9-afe1-4f5ae81bfa86",
+      "name": "info_fasta_installed1"
+    },
+    {
+      "parameters": {
+        "content": "## sorted.markdup.bam file operations",
+        "height": 352,
+        "width": 1376
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1712,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "be4f287a-33a0-4648-a67c-cd5528126b0e",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the {{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bam files: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1664,
+        -384
+      ],
+      "id": "590028a1-9805-4de2-a883-8f49f53c9f5c",
+      "name": "info_check_sorted.markdup.bam1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bam ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        -384
+      ],
+      "id": "a1c300e7-1e71-448f-b00d-ddc6f1b03a95",
+      "name": "control_sorted.markdup.bam1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1216,
+        -384
+      ],
+      "id": "01a7c4ab-1124-47f9-ac8a-11e107a2f1f0",
+      "name": "check_sorted.markdup.bam1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] {{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bam file could not be found; the gatk MarkDuplicatesSpark program is now being launched.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        -480
+      ],
+      "id": "629f486a-358a-42c8-8788-899d35f2548a",
+      "name": "info_start_sorted.markdup.bam1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; gatk MarkDuplicatesSpark \\\n  -I /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.bam \\\n  -O /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bam \\\n  -M /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.markdup.metrics.txt \\\n  --tmp-dir /data/tmp \\\n  --spark-master \"local[{{ $('Webhook1').item.json.body.ncore }}]\" >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -480
+      ],
+      "id": "e30bc916-b8ce-48be-ae6e-bb1998e0359d",
+      "name": "gatk_MarkDuplicatesSpark_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] gatk MarkDuplicatesSpark is complete and {{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bam file created: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        -480
+      ],
+      "id": "6d54e0d5-1f97-460b-a1ac-70d87b700416",
+      "name": "info_sorted.markdup.bam_completed1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] fastqc files found for the {{ $('Webhook1').item.json.body.ornekAdi }} sample; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        -304
+      ],
+      "id": "0b7a9ef3-9348-4e47-baae-785ff16a6aa2",
+      "name": "info_sorted.markdup.bam_file_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; gatk IndexFeatureFile -I /data/reference/known-sites/Homo_sapiens_assembly38.dbsnp138.vcf >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -3856,
+        -880
+      ],
+      "id": "5a7dba11-f987-4dc3-ae6e-74ce129c9744",
+      "name": "gatk_IndexFeatureFile_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] gatk IndexFeatureFile operation is complete: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3648,
+        -880
+      ],
+      "id": "dcaf0962-7622-4646-bd93-d3e64c7eadab",
+      "name": "info_gatk_IndexFeatureFile_completed1"
+    },
+    {
+      "parameters": {
+        "content": "## gatk BQSRPipelineSpark operations",
+        "height": 352,
+        "width": 1376
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3216,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "e8798035-8c46-4a7e-971e-32f1d86690c7",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f \"/files/bed/{{ $('Webhook1').item.json.body.bedFile?.[0]?.name || '' }}\" ]; then echo Var; else echo Yok; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3168,
+        32
+      ],
+      "id": "c3bef0b4-d9aa-4d9d-8e85-54e62b4b8354",
+      "name": "info_check_bed1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2944,
+        32
+      ],
+      "id": "f74057c2-fe98-4807-8378-f7993e23a7df",
+      "name": "check_bed1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] BED file not found. Continuing without a BED file.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        -48
+      ],
+      "id": "20d43d29-a9b5-4c20-a5fa-8b9603370177",
+      "name": "info_bed_not_found2"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] fastqc files found for the {{ $('Webhook1').item.json.body.ornekAdi }} sample; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        112
+      ],
+      "id": "3de8f301-eaef-436f-82fb-5794daeb31ad",
+      "name": "info_bed_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; gatk BQSRPipelineSpark \\\n  -R /data/reference/bwa/Homo_sapiens_assembly38.fasta \\\n  -I /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bam \\\n  --known-sites /data/reference/known-sites/Homo_sapiens_assembly38.dbsnp138.vcf \\\n  -O /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bqsr.recal.bam \\\n  -ip 100 \\\n  --spark-master \"local[{{ $('Webhook1').item.json.body.ncore }}]\" >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2496,
+        -48
+      ],
+      "id": "b4b21408-d822-488f-8880-6aa1f5b9d47e",
+      "name": "gatk_BQSRPL_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; gatk BQSRPipelineSpark \\\n  -R /data/reference/bwa/Homo_sapiens_assembly38.fasta \\\n  -I /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bam \\\n  --known-sites /data/reference/known-sites/Homo_sapiens_assembly38.dbsnp138.vcf \\\n  -L /data/bed/{{ $('Webhook1').item.json.body.bedFile[0].name }} \\\n  -O /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bqsr.recal.bam \\\n  -ip 100 \\\n  --spark-master \"local[{{ $('Webhook1').item.json.body.ncore }}]\" >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2496,
+        112
+      ],
+      "id": "fcdde7ca-4f8d-455c-b873-af39d85b8324",
+      "name": "gatk_BQSRPL_bed_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; samtools index /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bqsr.recal.bam >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2272,
+        32
+      ],
+      "id": "05b56da8-856a-4195-9314-95a753d55a1d",
+      "name": "samtools_index_BQSRPL_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] The BQSRPL process was applied to the data of the {{ $('Webhook1').item.json.body.ornekAdi }} sample.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        32
+      ],
+      "id": "fbf630d4-e8fb-45d4-b01f-5d6133d4577e",
+      "name": "info_bed_not_found3"
+    },
+    {
+      "parameters": {
+        "content": "## gatk HaplotypeCaller file operations",
+        "height": 352,
+        "width": 1376
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1712,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "6d4a8551-a090-4e1d-90b0-29ee8688c662",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the {{ $('Webhook1').item.json.body.ornekAdi }}.raw.vcf.gz file: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1664,
+        32
+      ],
+      "id": "9b01e16a-1e1e-4141-a2a0-a526a8169d94",
+      "name": "info_check_raw.vcf.gz1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/vcf/{{ $('Webhook1').item.json.body.ornekAdi }}.raw.vcf.gz ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        32
+      ],
+      "id": "015a9aae-7870-4217-9118-915894d1f58e",
+      "name": "control_raw.vcf.gz1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1216,
+        32
+      ],
+      "id": "38124751-4cc3-482a-bc44-baa5ab872652",
+      "name": "check_raw.vcf.gz1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] fastqc files found for the {{ $('Webhook1').item.json.body.ornekAdi }} sample; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        112
+      ],
+      "id": "0b976926-966d-49b5-89fb-7bdf03e31203",
+      "name": "info_raw.vcf.gz_file_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] {{ $('Webhook1').item.json.body.ornekAdi }}.raw.vcf.gz file could not be found; the gatk HaplotypeCaller program is now being launched.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        -64
+      ],
+      "id": "42120f37-a49a-4c8f-9f2c-38c8d275cccb",
+      "name": "info_start_gatk_HaplotypeCaller1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; gatk HaplotypeCaller \\\n  -R /data/reference/bwa/Homo_sapiens_assembly38.fasta \\\n  -I /data/bam/{{ $('Webhook1').item.json.body.ornekAdi }}.sorted.markdup.bqsr.recal.bam \\\n  -O /data/vcf/{{ $('Webhook1').item.json.body.ornekAdi }}.raw.vcf.gz >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -64
+      ],
+      "id": "5b71f18c-4b3d-4a4e-b49f-3b35b434efe9",
+      "name": "gatk_HaplotypeCaller_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] gatk HaplotypeCaller is complete and {{ $('Webhook1').item.json.body.ornekAdi }}.raw.vcf.gz file created: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        -64
+      ],
+      "id": "3252c663-8b2e-4036-b9b8-922bf0e58fc8",
+      "name": "info_gatk_HaplotypeCaller_completed1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002\nif [ ! -d /root/.vep/homo_sapiens_merged ]; then\n  (\n    staging=$(mktemp -d /root/.vep/.extract.XXXXXX) || exit 1\n    trap 'rm -rf \"$staging\"' EXIT\n    tar -xzf /data/reference/vep/homo_sapiens_merged_vep_116_GRCh38.tar.gz -C \"$staging\" &&\n      test -d \"$staging/homo_sapiens_merged\" &&\n      mv -T -n \"$staging/homo_sapiens_merged\" /root/.vep/homo_sapiens_merged\n  ) >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1 || exit 1\nfi"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2256,
+        368
+      ],
+      "id": "cf1e7a45-4dd7-4169-8c7e-8d221e8c695d",
+      "name": "vep116_mv_tar_ssh1",
+      "credentials": {
+        "sshPassword": {
+          "id": "ngsSshPasswordV1",
+          "name": "NGS Tools SSH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## bwa file operations",
+        "height": 336,
+        "width": 3632
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3216,
+        -1312
+      ],
+      "typeVersion": 1,
+      "id": "60e3a59a-ced4-44eb-8422-aa72c7039a30",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] All downloads are complete. You can continue without an internet connection.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3168,
+        -1184
+      ],
+      "id": "9c5bc7ec-ead6-4d22-be1f-eabc50d3eeb2",
+      "name": "info_downloads_done1"
+    },
+    {
+      "parameters": {
+        "content": "## EnsemblVEP file operations",
+        "height": 352,
+        "width": 1616
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3216,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "241ee0a6-d1c6-4566-a138-6a76347b85cc",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] Checking the {{ $('Webhook1').item.json.body.ornekAdi }}.annonatated.vcf.gz file: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -3168,
+        448
+      ],
+      "id": "9d48d95c-aa64-432c-894e-07d5ef106a8b",
+      "name": "info_check_annotated.vcf.gz1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; if [ -f /files/vcf/{{ $('Webhook1').item.json.body.ornekAdi }}.annotated.vcf.gz ]; then echo \"Var\"; else echo \"Yok\"; fi"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2944,
+        448
+      ],
+      "id": "b3cdd6ec-7f74-43a7-a1c6-997ab6d69ccb",
+      "name": "control_annotated.vcf.gz1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c9d7801-cc8b-4ae8-80f4-071795136ca5",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "Yok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2720,
+        448
+      ],
+      "id": "00b0d819-71ef-4fee-83eb-04f1338ac662",
+      "name": "check_annotated.vcf.gz1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] {{ $('Webhook1').item.json.body.ornekAdi }}.annotated.vcf.gz file could not be found; the EnsemblVEP program is now being launched.: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -2496,
+        368
+      ],
+      "id": "22770f32-5784-400e-a144-f155a8ae9187",
+      "name": "info_start_EnsemblVEP1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; test -d /root/.vep/homo_sapiens_merged || exit 1; vep \\\n  -i /data/vcf/{{ $('Webhook1').item.json.body.ornekAdi }}.raw.vcf.gz -o /data/vcf/{{ $('Webhook1').item.json.body.ornekAdi }}.annotated.vcf.gz --cache --offline --merged --species homo_sapiens --fasta /data/reference/bwa/Homo_sapiens_assembly38.fasta --assembly GRCh38 --fork {{ $('Webhook1').item.json.body.ncore }} --vcf --compress_output bgzip --everything --force_overwrite --dir_cache /root/.vep >> /data/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2032,
+        368
+      ],
+      "id": "2db6996a-75aa-42f8-8c3f-1f8a98db641f",
+      "name": "EnsemblVEP_ssh1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] {{ $('Webhook1').item.json.body.ornekAdi }}.annotated.vcf.gz file found; continuing: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1808,
+        544
+      ],
+      "id": "5cf14835-e1de-4a46-8d8d-b5da80bd8443",
+      "name": "info_rannotated.vcf.gz_file_found1"
+    },
+    {
+      "parameters": {
+        "command": "=umask 0002; echo \"[INFO] EnsemblVEP is complete and {{ $('Webhook1').item.json.body.ornekAdi }}.annotated.vcf.gz file created: $(date)\" >> /files/logs/{{ $('Webhook1').item.json.body.ornekAdi }}_terminal.log 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1808,
+        368
+      ],
+      "id": "e1bc6551-a58e-42ae-a92f-30c8d14327cb",
+      "name": "info_EnsemblVEP_completed1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\nconst safe = (value) => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$/.test(value);\nconst r1 = body?.fq1?.[0]?.name;\nconst r2 = body?.fq2?.[0]?.name;\nconst bed = body?.bedFile?.[0]?.name;\nif (!safe(body?.ornekAdi) || !safe(r1) || !safe(r2) || r1 === r2 ||\n    (bed != null && !safe(bed)) || !/^(?:[1-9]|[12][0-9]|3[0-2])$/.test(String(body?.ncore))) {\n  throw new Error('Invalid sample name, input file name or core count');\n}\nreturn $input.all();"
+      },
+      "name": "Validate analysis inputs1",
+      "id": "f647ef5b-81b5-4e36-8ef2-b3394904bfb0",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5552,
+        -784
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "control_bwa_indexes": {
+      "main": [
+        [
+          {
+            "node": "check_bwa_indexes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_bwa_indexes": {
+      "main": [
+        [
+          {
+            "node": "install_fasta_bwa_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_check_dict1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Validate analysis inputs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_start1": {
+      "main": [
+        [
+          {
+            "node": "info_check_fasta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_fasta1": {
+      "main": [
+        [
+          {
+            "node": "control_fasta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_download_fasta1": {
+      "main": [
+        [
+          {
+            "node": "download_hg38_fasta_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_fasta1": {
+      "main": [
+        [
+          {
+            "node": "check_fasta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_fasta1": {
+      "main": [
+        [
+          {
+            "node": "info_download_fasta1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_fasta_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_dbsnp": {
+      "main": [
+        [
+          {
+            "node": "check_dbsnp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_dbsnp": {
+      "main": [
+        [
+          {
+            "node": "info_download_dbsnp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_dbsnp_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_download_dbsnp": {
+      "main": [
+        [
+          {
+            "node": "download_dbsnp138_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_dbsnp": {
+      "main": [
+        [
+          {
+            "node": "control_dbsnp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "download_hg38_fasta_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_fasta_downloaded1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "download_dbsnp138_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_dbsnp_downloaded1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_vep_116_GRCh": {
+      "main": [
+        [
+          {
+            "node": "control_vep_116_GRCh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_vep_116_GRCh": {
+      "main": [
+        [
+          {
+            "node": "check_vep_116_GRCh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_vep_116_GRCh": {
+      "main": [
+        [
+          {
+            "node": "info_download_vep_116_GRCh",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_vep116_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_download_vep_116_GRCh": {
+      "main": [
+        [
+          {
+            "node": "download_vep_116_GRCh38_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "download_vep_116_GRCh38_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_vep116_downloaded1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fasta_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_dbsnp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fasta_downloaded1": {
+      "main": [
+        [
+          {
+            "node": "info_check_dbsnp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_dbsnp_downloaded1": {
+      "main": [
+        [
+          {
+            "node": "gatk_IndexFeatureFile_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_dbsnp_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_vep_116_GRCh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_vep116_downloaded1": {
+      "main": [
+        [
+          {
+            "node": "info_downloads_done1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_vep116_found1": {
+      "main": [
+        [
+          {
+            "node": "info_downloads_done1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_dict1": {
+      "main": [
+        [
+          {
+            "node": "control_dict1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_dict1": {
+      "main": [
+        [
+          {
+            "node": "check_dict1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_dict1": {
+      "main": [
+        [
+          {
+            "node": "info_create_dict1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_dict_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_create_dict1": {
+      "main": [
+        [
+          {
+            "node": "create_dict_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_dict_created1": {
+      "main": [
+        [
+          {
+            "node": "info_check_fai1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_dict_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_fai1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_fai1": {
+      "main": [
+        [
+          {
+            "node": "control_fai1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_fai1": {
+      "main": [
+        [
+          {
+            "node": "check_fai1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_fai1": {
+      "main": [
+        [
+          {
+            "node": "info_create_fai1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_fai_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_create_fai1": {
+      "main": [
+        [
+          {
+            "node": "create_fai_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_dict_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_dict_created1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_fai_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_fai_created1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fai_created1": {
+      "main": [
+        [
+          {
+            "node": "info_check_fastp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fai_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_fastp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_fastp1": {
+      "main": [
+        [
+          {
+            "node": "control_fastp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_fastp1": {
+      "main": [
+        [
+          {
+            "node": "check_fastp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_fastp1": {
+      "main": [
+        [
+          {
+            "node": "info_start_fastp1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_fastp_files_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_start_fastp1": {
+      "main": [
+        [
+          {
+            "node": "fastp_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fastp_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_fastp_completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fastp_completed1": {
+      "main": [
+        [
+          {
+            "node": "info_check_fastqc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fastp_files_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_fastqc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_fastqc1": {
+      "main": [
+        [
+          {
+            "node": "control_fastqc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_fastqc1": {
+      "main": [
+        [
+          {
+            "node": "check_fastqc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_fastqc1": {
+      "main": [
+        [
+          {
+            "node": "info_start_fastqc1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_fastqc_files_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_start_fastqc1": {
+      "main": [
+        [
+          {
+            "node": "fastqc_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fastqc_completed1": {
+      "main": [
+        [
+          {
+            "node": "info_check_sorted.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fastqc_files_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_sorted.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fastqc_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_fastqc_completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_sorted.bam1": {
+      "main": [
+        [
+          {
+            "node": "control_sorted.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_sorted.bam1": {
+      "main": [
+        [
+          {
+            "node": "check_sorted.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_sorted.bam1": {
+      "main": [
+        [
+          {
+            "node": "info_start_sorted.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_sorted.bam_file_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_start_sorted.bam1": {
+      "main": [
+        [
+          {
+            "node": "bwa_mem_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bwa_mem_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_sorted.bam_completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_sorted.bam_completed1": {
+      "main": [
+        [
+          {
+            "node": "info_check_sorted.markdup.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_sorted.bam_file_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_sorted.markdup.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "install_fasta_bwa_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_fasta_installed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_fasta_installed1": {
+      "main": [
+        [
+          {
+            "node": "info_check_dict1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_sorted.markdup.bam1": {
+      "main": [
+        [
+          {
+            "node": "control_sorted.markdup.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_sorted.markdup.bam1": {
+      "main": [
+        [
+          {
+            "node": "check_sorted.markdup.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_sorted.markdup.bam1": {
+      "main": [
+        [
+          {
+            "node": "info_start_sorted.markdup.bam1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_sorted.markdup.bam_file_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_start_sorted.markdup.bam1": {
+      "main": [
+        [
+          {
+            "node": "gatk_MarkDuplicatesSpark_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gatk_MarkDuplicatesSpark_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_sorted.markdup.bam_completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_sorted.markdup.bam_completed1": {
+      "main": [
+        [
+          {
+            "node": "info_check_bed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_sorted.markdup.bam_file_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_bed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gatk_IndexFeatureFile_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_gatk_IndexFeatureFile_completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_gatk_IndexFeatureFile_completed1": {
+      "main": [
+        [
+          {
+            "node": "info_check_vep_116_GRCh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_bed1": {
+      "main": [
+        [
+          {
+            "node": "check_bed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_bed1": {
+      "main": [
+        [
+          {
+            "node": "info_bed_not_found2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_bed_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_bed_not_found2": {
+      "main": [
+        [
+          {
+            "node": "gatk_BQSRPL_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_bed_found1": {
+      "main": [
+        [
+          {
+            "node": "gatk_BQSRPL_bed_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gatk_BQSRPL_ssh1": {
+      "main": [
+        [
+          {
+            "node": "samtools_index_BQSRPL_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gatk_BQSRPL_bed_ssh1": {
+      "main": [
+        [
+          {
+            "node": "samtools_index_BQSRPL_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "samtools_index_BQSRPL_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_bed_not_found3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_bed_not_found3": {
+      "main": [
+        [
+          {
+            "node": "info_check_raw.vcf.gz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_raw.vcf.gz1": {
+      "main": [
+        [
+          {
+            "node": "control_raw.vcf.gz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_raw.vcf.gz1": {
+      "main": [
+        [
+          {
+            "node": "check_raw.vcf.gz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_raw.vcf.gz1": {
+      "main": [
+        [
+          {
+            "node": "info_start_gatk_HaplotypeCaller1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_raw.vcf.gz_file_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_raw.vcf.gz_file_found1": {
+      "main": [
+        [
+          {
+            "node": "info_check_annotated.vcf.gz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_start_gatk_HaplotypeCaller1": {
+      "main": [
+        [
+          {
+            "node": "gatk_HaplotypeCaller_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gatk_HaplotypeCaller_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_gatk_HaplotypeCaller_completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_gatk_HaplotypeCaller_completed1": {
+      "main": [
+        [
+          {
+            "node": "info_check_annotated.vcf.gz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vep116_mv_tar_ssh1": {
+      "main": [
+        [
+          {
+            "node": "EnsemblVEP_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_downloads_done1": {
+      "main": [
+        [
+          {
+            "node": "control_bwa_indexes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_check_annotated.vcf.gz1": {
+      "main": [
+        [
+          {
+            "node": "control_annotated.vcf.gz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "control_annotated.vcf.gz1": {
+      "main": [
+        [
+          {
+            "node": "check_annotated.vcf.gz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_annotated.vcf.gz1": {
+      "main": [
+        [
+          {
+            "node": "info_start_EnsemblVEP1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info_rannotated.vcf.gz_file_found1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_start_EnsemblVEP1": {
+      "main": [
+        [
+          {
+            "node": "vep116_mv_tar_ssh1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EnsemblVEP_ssh1": {
+      "main": [
+        [
+          {
+            "node": "info_EnsemblVEP_completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate analysis inputs1": {
+      "main": [
+        [
+          {
+            "node": "info_start1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "03d93039-2715-49ba-9192-f47e81bd853b",
+  "meta": {
+    "instanceId": "4a30ac57ca7c206226639507d16d7d206a1a32463b1aa589bd6d34ec95c319e4"
+  },
+  "id": "ngsProjectAutoV1",
+  "tags": []
+}

@@ -1,0 +1,19 @@
+
+services:
+  fqauto:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fqauto
+    expose:
+      - "3838"
+    volumes:
+      - ../local_files:/files
+      - ../fqauto:/srv/shiny-server/app
+    restart: unless-stopped
+    networks:
+      - n8n_shared_network
+
+networks:
+  n8n_shared_network:
+    external: true

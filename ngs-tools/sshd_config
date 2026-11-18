@@ -1,0 +1,10 @@
+Port 22
+HostKey /etc/ssh/ssh_host_ed25519_key
+UsePAM yes
+AuthenticationMethods password
+PasswordAuthentication yes
+KbdInteractiveAuthentication no
+PermitRootLogin yes
+PermitUserEnvironment no
+AllowUsers root
+DisableForwarding yes

@@ -1,0 +1,16 @@
+services:
+  tsvauto-api:
+    build: .
+    container_name: tsvauto-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../local_files:/files
+    restart: unless-stopped
+    networks:
+      - n8n_shared_network
+
+networks:
+  n8n_shared_network:
+    external: true
+

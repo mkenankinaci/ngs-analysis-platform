@@ -1,0 +1,26 @@
+
+services:
+  shiny-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: varint
+    restart: unless-stopped
+
+    expose:
+      - "3838"
+    tty: true # bu satiri terminal kapanmasin ve program kendini kapatmasin diye ekledim
+    environment:
+      TZ: Europe/Istanbul
+
+    volumes:
+      - ../n8n-project/local-files:/files
+      - ../varint:/srv/shiny-server/app
+
+    networks:
+      - n8n_shared_network
+
+networks:
+  n8n_shared_network:
+    external: true
+
