@@ -1,9 +1,37 @@
+
+# Environment variables
 .env
 .env.*
 !.env.example
+
+# SSH credentials
 .ssh/
+**/.ssh/
+*.pem
+id_rsa
+id_ed25519
+
+# n8n persistent data
 **/n8n_data/
 *.sqlite*
+
+# NGS analysis data
 local_files/**
 !local_files/**/
 !local_files/**/.gitkeep
+
+# R temporary and history files
+.Rhistory
+**/.Rhistory
+.RData
+.Rproj.user/
+
+# Python temporary files
+__pycache__/
+*.pyc
+.venv/
+
+# System files
+.DS_Store
+Thumbs.db
+
